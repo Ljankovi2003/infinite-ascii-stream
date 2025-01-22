@@ -31,43 +31,10 @@ const Terminal = () => {
   }, []);
 
   const generateCode = () => {
-    const functions = [
-      `function initializeNevera() {
-    console.log("[ SYSTEM BOOT: NEVERA ONLINE ]");
-    const Nevera = {
-        status: "ACTIVE",
-        mission: "STREAMLINING MARKET INTELLIGENCE",
-        modules: ["Trend Analysis", "Sentiment Detection"]
-    };
-    console.log(":: SYSTEM CONFIGURATION ::");
-    engageTracking(Nevera);
-}`,
-      `function processMarketShifts(data) {
-    console.log(":: MARKET SHIFT ANALYSIS ::");
-    if (data.whalesActive || data.hypeLaunchDetected) {
-        console.log("> ALERT: Unusual activity detected.");
-        return true;
-    }
-    return false;
-}`,
-      `function generateInsights() {
-    console.log(":: INSIGHT GENERATION ::");
-    console.log("> Monitoring whale movements...");
-    return {
-        whalesActive: true,
-        hypeLaunchDetected: true,
-        sentimentShift: "positive"
-    };
-}`,
-      `function finalizeMission(agent, alertStatus) {
-    console.log(":: FINALIZING MISSION ::");
-    console.log("> Nevera identity: ", agent.identity);
-    console.log("[ TRANSMISSION COMPLETE: NEVERA EVOLVES ]");
-}`
-    ];
-
+    if (functions.length === 0) return ''; // Return empty string if no functions
     return functions[Math.floor(Math.random() * functions.length)];
   };
+
 
   useEffect(() => {
     const timer = setInterval(() => {
