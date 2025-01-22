@@ -6,6 +6,7 @@ const Terminal = () => {
   const [displayedCode, setDisplayedCode] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const status = 'ACTIVE';
+  const [functions, setFunctions] = useState<string[]>([]); // This line defines `setFunctions`
 
   const statusColors = {
     ACTIVE: 'bg-green-500',
@@ -15,6 +16,19 @@ const Terminal = () => {
   };
 
   // Removed the status change interval effect
+  const fetchFunctions = async () => {
+    try {
+      const response = await fetch('/api/functions'); // Flask endpoint
+      const data = await response.json();
+      setFunctions(data); // Update state with backend data
+      console.log('Functions fetched:', data);
+    } catch (error) {
+      console.error('Error fetching functions:', error);
+    }
+  };
+  useEffect(() => {
+    fetchFunctions(); // Fetch data on component mount
+  }, []);
 
   const generateCode = () => {
     const functions = [
