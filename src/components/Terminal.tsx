@@ -56,6 +56,7 @@ const Terminal = () => {
 
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
+      console.log('TYPING:', currentCode);
       if (!currentCode) return;
 
       const typeCharacter = () => {
