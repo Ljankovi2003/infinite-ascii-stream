@@ -2,6 +2,6 @@
     "version": 2,
 
     "rewrites": [
-      { "source": "/api/functions", "dedestinationst": "/api/index.py" }
+      { "source": "/api/functions", "destination": "/api/index.py" }
     ]
   }
