@@ -18,18 +18,15 @@ const Terminal = () => {
   // Fetch functions from backend
   const fetchFunctions = async () => {
     try {
-      console.log('GENERATING CODE2');
       const response = await fetch('/api/functions');
       const data = await response.json();
       setFunctions(data); // Update state with fetched functions
-      console.log('Functions fetched:', data);
     } catch (error) {
       console.error('Error fetching functions:', error);
     }
   };
 
   useEffect(() => {
-    console.log('GENERATING CODE');
     fetchFunctions(); // Fetch functions on component mount
   }, []);
 
@@ -52,34 +49,37 @@ const Terminal = () => {
   useEffect(() => {
     const maxDisplayedLines = 50;
     let currentIndex = 0;
-    
+
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
-      console.log('TYPING:', currentCode);
       if (!currentCode) return;
-  
+
       let tempCode = '';
       const typeCharacter = () => {
         if (currentIndex < currentCode.length) {
           const randomDelay = Math.random() < 0.1;
           if (!randomDelay) {
             tempCode += currentCode[currentIndex];
-            console.log('TYPED:', tempCode);
+
+            // Updating displayedCode state to simulate typewriter effect
             setDisplayedCode((prev) => {
               const newArray = [...prev];
+              // Check if the array is full, if so, remove the first line
               if (newArray.length >= maxDisplayedLines) {
-                newArray.shift(); // Remove the first line if we exceed the limit
+                newArray.shift();
               }
-              newArray[newArray.length - 1] = tempCode; // Add new line with typed code
+              // Add the new code to the last position
+              newArray[newArray.length - 1] = tempCode;
               return newArray;
             });
+
             currentIndex++;
-            setTimeout(typeCharacter, 35);
+            setTimeout(typeCharacter, 35); // Control typing speed
           } else {
-            setTimeout(typeCharacter, 100);
+            setTimeout(typeCharacter, 100); // Random delay between characters
           }
         } else {
-          // Add a new empty line when done typing
+          // Add a new empty line when finished typing this line
           setDisplayedCode((prev) => {
             const newArray = [...prev, ''];
             if (newArray.length > maxDisplayedLines) {
@@ -89,13 +89,13 @@ const Terminal = () => {
           });
         }
       };
-  
+
       typeCharacter();
-    }, 4000); // Adjust this interval to control typing speed
-  
+    }, 4000); // Adjust this interval to control how often new lines are typed
+
     return () => clearInterval(typingInterval);
-  }, [functions]); // Depend on 'functions' to rerun the effect when functions are fetched
-  
+  }, [functions]); // Dependency array, fetches functions and triggers effect
+
   return (
     <div className="relative space-y-2 sm:space-y-4 mb-8">
       <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
@@ -107,7 +107,7 @@ const Terminal = () => {
           {format(currentTime, 'HH:mm:ss')}
         </div>
       </div>
-      
+
       <div
         ref={terminalRef}
         className="terminal-body h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto overflow-x-hidden p-2 sm:p-4 border border-white/5 rounded-lg scrollbar-hide"
