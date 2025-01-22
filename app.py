@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # This allows all domains, you can also configure specific domains
 
 @app.route('/api/functions', methods=['GET'])
 def get_functions():
