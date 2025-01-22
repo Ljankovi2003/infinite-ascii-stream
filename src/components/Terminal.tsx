@@ -38,66 +38,52 @@ const Terminal = () => {
 
   // Update current time every second
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  // Typewriting effect simulation
-  useEffect(() => {
     const maxDisplayedLines = 50;
-    let currentIndex = 0;
-
+  
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
       if (!currentCode) return;
-
+  
+      let currentIndex = 0;  // Reset index for each new line
       let tempCode = '';
+  
       const typeCharacter = () => {
         if (currentIndex < currentCode.length) {
           const randomDelay = Math.random() < 0.1;
           if (!randomDelay) {
             tempCode += currentCode[currentIndex];
-
-            // Updating displayedCode state to simulate typewriter effect
-            setDisplayedCode((prev) => {
+            
+            setDisplayedCode(prev => {
               const newArray = [...prev];
-              // Check if the array is full, if so, remove the first line
               if (newArray.length >= maxDisplayedLines) {
                 newArray.shift();
               }
-              // Add the new code to the last position
-              newArray[newArray.length - 1] = tempCode;
+              if (newArray.length === 0) {
+                newArray.push(tempCode);
+              } else {
+                newArray[newArray.length - 1] = tempCode;
+              }
               return newArray;
             });
-            console.log("Dis",displayedCode)
-
+  
             currentIndex++;
-            setTimeout(typeCharacter, 35); // Control typing speed
+            setTimeout(typeCharacter, 35);
           } else {
-            setTimeout(typeCharacter, 100); // Random delay between characters
+            setTimeout(typeCharacter, 100);
           }
         } else {
-          // Add a new empty line when finished typing this line
-          console.log("Dis",displayedCode)
-          setDisplayedCode((prev) => {
+          setDisplayedCode(prev => {
             const newArray = [...prev, ''];
-            if (newArray.length > maxDisplayedLines) {
-              newArray.shift();
-            }
-            return newArray;
+            return newArray.slice(-maxDisplayedLines);
           });
         }
       };
-
+  
       typeCharacter();
-    }, 4000); // Adjust this interval to control how often new lines are typed
-
+    }, 4000);
+  
     return () => clearInterval(typingInterval);
-  }, [functions]); // Dependency array, fetches functions and triggers effect
-
+  }, [functions]);
   return (
     <div className="relative space-y-2 sm:space-y-4 mb-8">
       <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
