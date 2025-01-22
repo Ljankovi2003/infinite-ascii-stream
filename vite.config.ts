@@ -6,20 +6,21 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",
+    host: "::", // Allow all IP addresses
     port: 8080,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:5000', // Flask backend URL
+        target:
+          mode === 'development' ? 'http://127.0.0.1:5000' : '/api', // Local Flask server in dev, or remote API in prod
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // Remove /api prefix for Flask
+        rewrite: (path) => path.replace(/^\/api/, ''), // Remove /api prefix before forwarding to Flask
       },
     },
   },
   plugins: [
     react(),
     mode === 'development' &&
-    componentTagger(),
+      componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
