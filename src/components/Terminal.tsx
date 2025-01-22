@@ -50,29 +50,27 @@ const Terminal = () => {
 
   // Typewriting effect simulation
   useEffect(() => {
-    let currentIndex = 0;
-    let tempCode = '';
     const maxDisplayedLines = 50;
-
+    let currentIndex = 0;
+    
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
-      
+      console.log('TYPING:', currentCode);
       if (!currentCode) return;
-
-      tempCode = '';
-      currentIndex = 0;
-
+  
+      let tempCode = '';
       const typeCharacter = () => {
         if (currentIndex < currentCode.length) {
           const randomDelay = Math.random() < 0.1;
           if (!randomDelay) {
             tempCode += currentCode[currentIndex];
-            setDisplayedCode(prev => {
+            console.log('TYPED:', tempCode);
+            setDisplayedCode((prev) => {
               const newArray = [...prev];
               if (newArray.length >= maxDisplayedLines) {
-                newArray.shift();
+                newArray.shift(); // Remove the first line if we exceed the limit
               }
-              newArray[newArray.length - 1] = tempCode;
+              newArray[newArray.length - 1] = tempCode; // Add new line with typed code
               return newArray;
             });
             currentIndex++;
@@ -81,7 +79,8 @@ const Terminal = () => {
             setTimeout(typeCharacter, 100);
           }
         } else {
-          setDisplayedCode(prev => {
+          // Add a new empty line when done typing
+          setDisplayedCode((prev) => {
             const newArray = [...prev, ''];
             if (newArray.length > maxDisplayedLines) {
               newArray.shift();
@@ -90,27 +89,18 @@ const Terminal = () => {
           });
         }
       };
-
+  
       typeCharacter();
-    }, 4000);
-
+    }, 4000); // Adjust this interval to control typing speed
+  
     return () => clearInterval(typingInterval);
-  }, []);
-
-  useEffect(() => {
-    if (terminalRef.current) {
-      terminalRef.current.scrollTo({
-        top: terminalRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
-    }
-  }, [displayedCode]);
-
+  }, [functions]); // Depend on 'functions' to rerun the effect when functions are fetched
+  
   return (
     <div className="relative space-y-2 sm:space-y-4 mb-8">
       <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
         <div className="flex items-center space-x-2 sm:space-x-3">
-          <div className={h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse status-glow}></div>
+          <div className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${statusColors[status]} animate-pulse status-glow`}></div>
           <span className="text-white/80 font-mono text-xs sm:text-sm glow">STATUS: {status}</span>
         </div>
         <div className="text-white/80 font-mono text-xs sm:text-sm glow">
@@ -118,17 +108,17 @@ const Terminal = () => {
         </div>
       </div>
       
-      <div 
-        ref={terminalRef} 
+      <div
+        ref={terminalRef}
         className="terminal-body h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto overflow-x-hidden p-2 sm:p-4 border border-white/5 rounded-lg scrollbar-hide"
         style={{ scrollBehavior: 'smooth', msOverflowStyle: 'none', scrollbarWidth: 'none' }}
       >
         <style>
-          {
+          {`
             .scrollbar-hide::-webkit-scrollbar {
               display: none;
             }
-          }
+          `}
         </style>
         {displayedCode.map((code, index) => (
           <pre key={index} className="text-white/90 text-xs sm:text-sm font-mono mb-2 sm:mb-4 whitespace-pre hover:text-white/100 transition-colors">
