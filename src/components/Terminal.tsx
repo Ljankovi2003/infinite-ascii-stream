@@ -72,6 +72,7 @@ const Terminal = () => {
               newArray[newArray.length - 1] = tempCode;
               return newArray;
             });
+            console.log("Dis",displayedCode)
 
             currentIndex++;
             setTimeout(typeCharacter, 35); // Control typing speed
@@ -80,6 +81,7 @@ const Terminal = () => {
           }
         } else {
           // Add a new empty line when finished typing this line
+          console.log("Dis",displayedCode)
           setDisplayedCode((prev) => {
             const newArray = [...prev, ''];
             if (newArray.length > maxDisplayedLines) {
