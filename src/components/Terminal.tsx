@@ -6,7 +6,7 @@ const Terminal = () => {
   const [displayedCode, setDisplayedCode] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const status = 'ACTIVE';
-  const [functions, setFunctions] = useState<string[]>([]); // This line defines `setFunctions`
+  const [functions, setFunctions] = useState<string[]>([]);
 
   const statusColors = {
     ACTIVE: 'bg-green-500',
@@ -15,30 +15,31 @@ const Terminal = () => {
     ANALYZING: 'bg-purple-500'
   };
 
-  // Removed the status change interval effect
+  // Fetch functions from backend
   const fetchFunctions = async () => {
     try {
-      console.log("GENERATING CODE2");
-      const response = await fetch('/api/functions'); // Flask endpoint
+      console.log('GENERATING CODE2');
+      const response = await fetch('/api/functions');
       const data = await response.json();
-      setFunctions(data); // Update state with backend data
+      setFunctions(data); // Update state with fetched functions
       console.log('Functions fetched:', data);
     } catch (error) {
       console.error('Error fetching functions:', error);
     }
   };
+
   useEffect(() => {
-    console.log("GENERATING CODE");
-    fetchFunctions(); // Fetch data on component mount
+    console.log('GENERATING CODE');
+    fetchFunctions(); // Fetch functions on component mount
   }, []);
 
+  // Function to generate random code
   const generateCode = () => {
-    
     if (functions.length === 0) return ''; // Return empty string if no functions
     return functions[Math.floor(Math.random() * functions.length)];
   };
 
-
+  // Update current time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -47,25 +48,22 @@ const Terminal = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Typewriting effect simulation
   useEffect(() => {
+    const maxDisplayedLines = 50;
     let currentIndex = 0;
     let tempCode = '';
-    const maxDisplayedLines = 50;
 
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
-      
       if (!currentCode) return;
-
-      tempCode = '';
-      currentIndex = 0;
 
       const typeCharacter = () => {
         if (currentIndex < currentCode.length) {
           const randomDelay = Math.random() < 0.1;
           if (!randomDelay) {
             tempCode += currentCode[currentIndex];
-            setDisplayedCode(prev => {
+            setDisplayedCode((prev) => {
               const newArray = [...prev];
               if (newArray.length >= maxDisplayedLines) {
                 newArray.shift();
@@ -79,7 +77,8 @@ const Terminal = () => {
             setTimeout(typeCharacter, 100);
           }
         } else {
-          setDisplayedCode(prev => {
+          // Add a new empty line when done typing
+          setDisplayedCode((prev) => {
             const newArray = [...prev, ''];
             if (newArray.length > maxDisplayedLines) {
               newArray.shift();
@@ -90,11 +89,12 @@ const Terminal = () => {
       };
 
       typeCharacter();
-    }, 4000);
+    }, 4000); // Adjust this interval to control typing speed
 
     return () => clearInterval(typingInterval);
-  }, []);
+  }, [functions]); // Depend on 'functions' to rerun the effect when functions are fetched
 
+  // Scroll to bottom whenever displayed code changes
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTo({
@@ -116,8 +116,8 @@ const Terminal = () => {
         </div>
       </div>
       
-      <div 
-        ref={terminalRef} 
+      <div
+        ref={terminalRef}
         className="terminal-body h-[calc(100vh-16rem)] sm:h-[calc(100vh-26rem)] overflow-y-auto overflow-x-hidden p-2 sm:p-4 border border-white/5 rounded-lg scrollbar-hide"
         style={{ scrollBehavior: 'smooth', msOverflowStyle: 'none', scrollbarWidth: 'none' }}
       >
