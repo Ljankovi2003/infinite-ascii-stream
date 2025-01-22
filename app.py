@@ -12,6 +12,3 @@ def get_functions():
         "function example3() { console.log('Example 3'); }"
     ]
     return jsonify(functions)
-
-if __name__ == "__main__":
-    app.run()
