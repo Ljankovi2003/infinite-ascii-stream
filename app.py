@@ -69,14 +69,9 @@ async def get_channel_messages():
 async def get_messages():
     try:
         messages = await get_channel_messages()
-        return jsonify({
-            'status': 'success',
-            'message_count': len(messages),
-            'messages': messages
-        })
+        return jsonify(messages)  # Return only the messages list
     except Exception as e:
         return jsonify({
-            'status': 'error',
             'error': str(e)
         }), 500
 
