@@ -18,6 +18,7 @@ const Terminal = () => {
   // Removed the status change interval effect
   const fetchFunctions = async () => {
     try {
+      console.log("GENERATING CODE2");
       const response = await fetch('/api/functions'); // Flask endpoint
       const data = await response.json();
       setFunctions(data); // Update state with backend data
@@ -27,11 +28,12 @@ const Terminal = () => {
     }
   };
   useEffect(() => {
+    console.log("GENERATING CODE");
     fetchFunctions(); // Fetch data on component mount
   }, []);
 
   const generateCode = () => {
-    console.log("GENERATING CODE");
+    
     if (functions.length === 0) return ''; // Return empty string if no functions
     return functions[Math.floor(Math.random() * functions.length)];
   };
