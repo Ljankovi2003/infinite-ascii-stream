@@ -31,6 +31,7 @@ const Terminal = () => {
   }, []);
 
   const generateCode = () => {
+    console.log("GENERATING CODE");
     if (functions.length === 0) return ''; // Return empty string if no functions
     return functions[Math.floor(Math.random() * functions.length)];
   };
