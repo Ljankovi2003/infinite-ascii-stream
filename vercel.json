@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/*.py",  // Matches your Flask functions (like api/functions.py)
-      "use": "@vercel/python"  // Uses Vercel's Python runtime
+      "src": "api/*.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",  // Routes all API requests to Python functions
-      "dest": "/api/$1.py" // Matches Python function files
+      "src": "/api/(.*)",
+      "dest": "/api/$1.py"
     }
   ]
 }
