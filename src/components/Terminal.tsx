@@ -52,13 +52,13 @@ const Terminal = () => {
   useEffect(() => {
     const maxDisplayedLines = 50;
     let currentIndex = 0;
-    let tempCode = '';
-
+    
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
       console.log('TYPING:', currentCode);
       if (!currentCode) return;
-
+  
+      let tempCode = '';
       const typeCharacter = () => {
         if (currentIndex < currentCode.length) {
           const randomDelay = Math.random() < 0.1;
@@ -67,9 +67,9 @@ const Terminal = () => {
             setDisplayedCode((prev) => {
               const newArray = [...prev];
               if (newArray.length >= maxDisplayedLines) {
-                newArray.shift();
+                newArray.shift(); // Remove the first line if we exceed the limit
               }
-              newArray[newArray.length - 1] = tempCode;
+              newArray[newArray.length - 1] = tempCode; // Add new line with typed code
               return newArray;
             });
             currentIndex++;
@@ -88,23 +88,13 @@ const Terminal = () => {
           });
         }
       };
-
+  
       typeCharacter();
     }, 4000); // Adjust this interval to control typing speed
-
+  
     return () => clearInterval(typingInterval);
   }, [functions]); // Depend on 'functions' to rerun the effect when functions are fetched
-
-  // Scroll to bottom whenever displayed code changes
-  useEffect(() => {
-    if (terminalRef.current) {
-      terminalRef.current.scrollTo({
-        top: terminalRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
-    }
-  }, [displayedCode]);
-
+  
   return (
     <div className="relative space-y-2 sm:space-y-4 mb-8">
       <div className="terminal-header p-2 sm:p-4 border border-white/5 rounded-lg flex items-center justify-between">
