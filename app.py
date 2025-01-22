@@ -89,4 +89,4 @@ if __name__ == '__main__':
     client.start()
     
     # Run Flask app with async support
-    app.run(debug=True)
+    app.run()
