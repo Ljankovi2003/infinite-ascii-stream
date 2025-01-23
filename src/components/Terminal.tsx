@@ -67,9 +67,9 @@ const Terminal = () => {
             });
   
             currentIndex++;
-            setTimeout(typeCharacter, 35);
+            setTimeout(typeCharacter, 5);
           } else {
-            setTimeout(typeCharacter, 100);
+            setTimeout(typeCharacter, 10);
           }
         } else {
           setDisplayedCode(prev => {
