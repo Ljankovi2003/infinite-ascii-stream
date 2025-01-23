@@ -38,7 +38,7 @@ const Terminal = () => {
 
   // Update current time every second
   useEffect(() => {
-    const maxDisplayedLines = 50;
+    const maxDisplayedLines = 20;
   
     const typingInterval = setInterval(() => {
       const currentCode = generateCode();
@@ -80,7 +80,7 @@ const Terminal = () => {
       };
   
       typeCharacter();
-    }, 4000);
+    }, 2000);
   
     return () => clearInterval(typingInterval);
   }, [functions]);
