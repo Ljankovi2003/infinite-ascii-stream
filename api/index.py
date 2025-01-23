@@ -1,79 +1,150 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from telethon import TelegramClient, sync
-from telethon.tl.types import PeerChannel
-import asyncio
+import requests
+import random
 import os
 from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
 
-# Telegram API credentials
-API_ID = '20418380'
-API_HASH = '88928238a385ae34bf1fb8165af0773e'
+# Define the RPC URL
+RPC_URL = "https://api.devnet.solana.com"
 
-
-# Initialize the client
-client = TelegramClient('session_name', API_ID, API_HASH)
-
-# Channel usernames or IDs to monitor
-CHANNELS = [
-    '@gmgnsignals',
-    '@PumpLiveKOTH',
-    'channel_username_3'
+# List of names to append (only one name will be selected randomly)
+Names = [
+    "Noodles11", "Cupsey", "Kenzo", "Grandfn3", "Spuno", 
+    "Trump3", "mafia", "earl", "gm6"
 ]
 
-def format_message(message):
-    """Format a Telegram message for JSON response"""
-    return {
-        'id': message.id,
-        'channel': message.chat.username or message.chat.title,
-        'date': message.date.isoformat(),
-        'text': message.text if message.text else '[Media Message]',
-        'has_media': bool(message.media),
-        'views': getattr(message, 'views', 0),
-        'forwards': getattr(message, 'forwards', 0)
+# Other possible phrases
+Phrases = [
+    "Pump bonding curve completed.",
+    "King of the hill reached."
+]
+
+def get_latest_slot():
+    """Fetch the latest slot from the Solana network."""
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "getEpochInfo",
+        "params": []
     }
 
-async def get_channel_messages():
-    """Retrieve messages from multiple channels"""
-    messages = []
-    
     try:
-        # Connect if not already connected
-        if not client.is_connected():
-            await client.connect()
-            
+        # Make the POST request to fetch the epoch info (which contains the latest slot)
+        response = requests.post(RPC_URL, json=payload)
+        response.raise_for_status()  # Raise an exception for HTTP errors
 
-        # Fetch messages from each channel
-        for channel in CHANNELS:
-            try:
-                entity = await client.get_entity(channel)
-                channel_messages = await client.get_messages(entity, limit=10)
-                messages.extend([format_message(msg) for msg in channel_messages])
-            except Exception as e:
-                print(f"Error fetching messages from {channel}: {str(e)}")
-                continue
+        # Parse the JSON response
+        result = response.json()
 
-        # Sort all messages by date
-        messages.sort(key=lambda x: x['date'], reverse=True)
-        
-    except Exception as e:
-        print(f"Error in get_channel_messages: {str(e)}")
-        raise
+        # Check for errors in the response
+        if "error" in result:
+            print(f"Error retrieving epoch info: {result['error']}")
+            return None
 
-    return messages
+        # Extract the latest slot from the result
+        epoch_info = result.get("result", {})
+        if epoch_info and "absoluteSlot" in epoch_info:
+            return epoch_info["absoluteSlot"]
+        else:
+            print("Failed to retrieve the latest slot.")
+            return None
+
+    except requests.RequestException as e:
+        print(f"Request failed: {e}")
+        return None
+
+def process_block_data_and_generate_strings(slot):
+    """Fetches block data, extracts signatures, and generates strings for each signature."""
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "getBlock",
+        "params": [
+            slot,
+            {
+                "encoding": "json",
+                "maxSupportedTransactionVersion": 0,
+                "transactionDetails": "full",
+                "rewards": False
+            }
+        ]
+    }
+
+    try:
+        # Make the POST request to fetch block data
+        response = requests.post(RPC_URL, json=payload)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        # Parse the JSON response
+        result = response.json()
+
+        # Check for errors in the response
+        if "error" in result:
+            print(f"Error retrieving block data: {result['error']}")
+            return None
+
+        block_data = result.get("result", {})
+
+        # Extract signatures
+        if block_data and 'transactions' in block_data:
+            signatures = []
+            for tx in block_data['transactions']:
+                if 'transaction' in tx:
+                    signatures.extend(tx['transaction'].get('signatures', []))
+
+            # Generate the string for each signature
+            signature_strings = []
+            for sig in signatures:
+                # Randomly choose a phrase to append
+                phrase = random.choice(Phrases)
+
+                # 40% chance to add name and action
+                if random.random() < 0.4:
+                    # Randomly choose one name from the list to append
+                    name = random.choice(Names)
+
+                    # Randomly choose whether it's a "bought" or "sold" action (50% chance for each)
+                    action = random.choice(["bought", "sold"])
+
+                    # Construct the signature string
+                    signature_str = f"Analyzing and learning from transaction {sig}. {phrase} {name} {action}."
+                else:
+                    # If 60% chance, do not append name and action
+                    signature_str = f"Analyzing and learning from transaction {sig}. {phrase}"
+
+                signature_strings.append(signature_str)
+
+            return signature_strings
+
+        else:
+            print(f"No transactions found in block data for Slot {slot}.")
+            return None
+
+    except requests.RequestException as e:
+        print(f"Request failed: {e}")
+        return None
 
 @app.route('/api/messages', methods=['GET'])
-async def get_messages():
-    try:
-        messages = await get_channel_messages()
-        return jsonify(messages)  # Return only the messages list
-    except Exception as e:
-        return jsonify({
-            'error': str(e)
-        }), 500
+def get_messages():
+    """Fetches the latest slot and generates strings for transactions."""
+    # Get the latest slot dynamically
+    slot = get_latest_slot()
+    if slot:
+        print(f"Fetching data for Slot {slot}...")
+
+        # Fetch and generate the signature strings
+        signature_strings = process_block_data_and_generate_strings(slot)
+
+        if signature_strings:
+            return jsonify({"messages": signature_strings})
+        else:
+            return jsonify({"error": "Failed to process data for the slot."}), 400
+    else:
+        return jsonify({"error": "Could not retrieve the latest slot."}), 400
 
 @app.route('/api/functions', methods=['GET'])
 def get_functions():
@@ -85,8 +156,4 @@ def get_functions():
     return jsonify(functions)
 
 if __name__ == '__main__':
-    # Start the Telegram client
-    client.start()
-    
-    # Run Flask app with async support
-    app.run()
+    app.run(debug=True)
