@@ -144,7 +144,6 @@ client = TelegramClient('session_name', API_ID, API_HASH)
 
 async def get_last_10_messages():
     # Start the client
-    await client.start(PHONE_NUMBER)
 
     # Get the chat entity (user, group, or channel)
     chat = await client.get_entity(CHAT)
