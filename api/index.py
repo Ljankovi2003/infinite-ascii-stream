@@ -132,6 +132,7 @@ def process_block_data_and_generate_strings(slot):
 def get_messages():
     """Fetches the latest slot and generates strings for transactions."""
     # Get the latest slot dynamically
+    slot = get_latest_slot()
     transactions = [
     "Analyzing and learning from transaction 5s9JAXTY2bKP9GuvhYQvHt6hJh7ybrGUV5AjwzXgXT8zQUrvdK9UjCRxHbsYReW84SF1HhfYk55DFyPB3wBFvaeZ. King of the hill reached.",
     "Analyzing and learning from transaction 43QjfEudRfZ6iLk3At7uRLibCS6biAU7CYd6byCvBqatdJmWXtkwuJKH9QZp4vzBkb7ErC1KFq2t7YH5SMwwuWnA. King of the hill reached. Grandfn3 sold.",
