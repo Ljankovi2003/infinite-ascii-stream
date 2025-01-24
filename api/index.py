@@ -137,7 +137,7 @@ def get_messages():
     if slot == None:
         answer = "Failed to retrieve the latest slot."
     else:
-        answr = f"Latest slot: {slot}"
+        answer = f"Latest slot: {slot}"
     transactions = [
         answer, 
     "Analyzing and learning from transaction 5s9JAXTY2bKP9GuvhYQvHt6hJh7ybrGUV5AjwzXgXT8zQUrvdK9UjCRxHbsYReW84SF1HhfYk55DFyPB3wBFvaeZ. King of the hill reached.",
