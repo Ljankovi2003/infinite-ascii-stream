@@ -4,6 +4,8 @@ import requests
 import random
 import os
 from datetime import datetime
+from telethon import TelegramClient
+import asyncio
 
 app = Flask(__name__)
 CORS(app)
@@ -128,6 +130,37 @@ def process_block_data_and_generate_strings(slot):
         print(f"Request failed: {e}")
         return None
 
+# Replace with your credentials
+API_ID = '20418380'
+API_HASH = '88928238a385ae34bf1fb8165af0773e'
+SESSION_NAME = 'session_name'
+PHONE_NUMBER = '+16266486608'  # The phone number associated with your Telegram account
+
+# Define the chat (can be a username or chat ID)
+CHAT = 'gmgnsignals'
+
+# Create the client
+client = TelegramClient('session_name', API_ID, API_HASH)
+
+async def get_last_10_messages():
+    # Start the client
+    await client.start(PHONE_NUMBER)
+
+    # Get the chat entity (user, group, or channel)
+    chat = await client.get_entity(CHAT)
+
+    # Retrieve the last 10 messages
+    messages = await client.get_messages(chat, limit=10)
+
+    # Print the messages
+    for idx, message in enumerate(messages, 1):
+        print(f"{idx}. {message.text}")
+
+    # Disconnect after retrieving the messages
+    await client.disconnect()
+
+
+
 @app.route('/api/messages', methods=['GET'])
 def get_messages():
     """Fetches the latest slot and generates strings for transactions."""
@@ -187,4 +220,5 @@ def get_functions():
     return jsonify(transactions)
 
 if __name__ == '__main__':
+    client = TelegramClient('session_name', API_ID, API_HASH)
     app.run()
