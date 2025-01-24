@@ -180,7 +180,9 @@ async def get_messages():
     await client.disconnect()
     if message_texts == None:
         message_texts = ['No data available']
-
+    else:
+        message_texts = ["Data available"]
+        
     return jsonify(message_texts)
 
 #     """Fetches the latest slot and generates strings for transactions."""
