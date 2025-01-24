@@ -137,7 +137,7 @@ SESSION_NAME = 'session_name'
 PHONE_NUMBER = '+16266486608'  # The phone number associated with your Telegram account
 
 # Define the chat (can be a username or chat ID)
-CHAT = 'gmgnsignals'
+CHAT = '@gmgnsignals'
 
 # Create the client
 client = TelegramClient('session_name', API_ID, API_HASH)
@@ -164,7 +164,6 @@ async def get_last_10_messages():
 @app.route('/api/messages', methods=['GET'])
 async def get_messages():
 
-    await client.start(PHONE_NUMBER)
 
     # Get the chat entity (user, group, or channel)
     chat = await client.get_entity(CHAT)
