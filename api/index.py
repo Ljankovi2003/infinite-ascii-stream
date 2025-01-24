@@ -134,12 +134,21 @@ def get_messages():
     # Get the latest slot dynamically
     slot = get_latest_slot()
 
+    
+
     if slot == None:
         answer = "Failed to retrieve the latest slot."
+        data = 'No data available'
     else:
+
         answer = f"Latest slot: {slot}"
+        data = process_block_data_and_generate_strings(slot)
+        if data == None:
+            data = 'No data available2'
+        else:
+            data = data[0]
     transactions = [
-        answer, 
+        answer, data
    ]
     
     return jsonify(transactions)
