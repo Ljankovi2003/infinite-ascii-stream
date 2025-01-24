@@ -152,39 +152,58 @@ async def get_last_10_messages():
     # Retrieve the last 10 messages
     messages = await client.get_messages(chat, limit=10)
 
-    # Print the messages
-    for idx, message in enumerate(messages, 1):
-        print(f"{idx}. {message.text}")
+    # Return the messages as a list of strings
+    message_texts = [message.text for message in messages]
 
     # Disconnect after retrieving the messages
     await client.disconnect()
 
+    return message_texts
+
 
 
 @app.route('/api/messages', methods=['GET'])
-def get_messages():
-    """Fetches the latest slot and generates strings for transactions."""
-    # Get the latest slot dynamically
-    slot = get_latest_slot()
+async def get_messages():
+
+    await client.start(PHONE_NUMBER)
+
+    # Get the chat entity (user, group, or channel)
+    chat = await client.get_entity(CHAT)
+
+    # Retrieve the last 10 messages
+    messages = await client.get_messages(chat, limit=10)
+
+    # Return the messages as a list of strings
+    message_texts = [message.text for message in messages]
+
+    # Disconnect after retrieving the messages
+    await client.disconnect()
+    if message_texts == None:
+        message_texts = ['No data available']
+    return message_texts
+
+#     """Fetches the latest slot and generates strings for transactions."""
+#     # Get the latest slot dynamically
+#     slot = get_latest_slot()
 
     
 
-    if slot == None:
-        answer = "Failed to retrieve the latest slot."
-        data = 'No data available'
-    else:
+#     if slot == None:
+#         answer = "Failed to retrieve the latest slot."
+#         data = 'No data available'
+#     else:
 
-        answer = f"Latest slot: {slot}"
-        data = process_block_data_and_generate_strings(slot)
-        if data == None:
-            data = 'No data available2'
-        else:
-            data = data[0]
-    transactions = [
-        answer, data
-   ]
+#         answer = f"Latest slot: {slot}"
+#         data = process_block_data_and_generate_strings(slot)
+#         if data == None:
+#             data = 'No data available2'
+#         else:
+#             data = data[0]
+#     transactions = [
+#         answer, data
+#    ]
     
-    return jsonify(transactions)
+#     return jsonify(transactions)
 
 @app.route('/api/functions', methods=['GET'])
 def get_functions():
