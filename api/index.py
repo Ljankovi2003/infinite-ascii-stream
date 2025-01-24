@@ -133,8 +133,13 @@ def get_messages():
     """Fetches the latest slot and generates strings for transactions."""
     # Get the latest slot dynamically
     slot = get_latest_slot()
+
+    if slot == None:
+        answer = "Failed to retrieve the latest slot."
+    else:
+        answr = f"Latest slot: {slot}"
     transactions = [
-        {str(slot)}, 
+        answer, 
     "Analyzing and learning from transaction 5s9JAXTY2bKP9GuvhYQvHt6hJh7ybrGUV5AjwzXgXT8zQUrvdK9UjCRxHbsYReW84SF1HhfYk55DFyPB3wBFvaeZ. King of the hill reached.",
     "Analyzing and learning from transaction 43QjfEudRfZ6iLk3At7uRLibCS6biAU7CYd6byCvBqatdJmWXtkwuJKH9QZp4vzBkb7ErC1KFq2t7YH5SMwwuWnA. King of the hill reached. Grandfn3 sold.",
     "Analyzing and learning from transaction tNtPFJfTdmCuLL8rwSxdwczy9yCu2euz4pETnJuoewJuo8X6JLKuqGpUNCr59oJ2J72f2r1Qs76LndWKgyoJoAx. Pump bonding curve completed.",
