@@ -164,7 +164,10 @@ async def get_last_10_messages():
 @app.route('/api/messages', methods=['GET'])
 async def get_messages():
 
+    client = TelegramClient('new_session_name', API_ID, API_HASH)
+    await client.start()
 
+    print(client)
     # Get the chat entity (user, group, or channel)
     chat = await client.get_entity(CHAT)
 
@@ -174,13 +177,11 @@ async def get_messages():
     # Return the messages as a list of strings
     message_texts = [message.text for message in messages]
 
-    # Disconnect after retrieving the messages
-    await client.disconnect()
     if message_texts == None:
         message_texts = ['No data available']
-    else:
-        message_texts = ["Data available"]
-        
+   
+    # Disconnect after retrieving the messages
+    await client.disconnect()
     return jsonify(message_texts)
 
 #     """Fetches the latest slot and generates strings for transactions."""
@@ -240,5 +241,4 @@ def get_functions():
     return jsonify(transactions)
 
 if __name__ == '__main__':
-    client = TelegramClient('session_name', API_ID, API_HASH)
     app.run()
