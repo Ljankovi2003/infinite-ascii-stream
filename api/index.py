@@ -163,6 +163,7 @@ async def get_last_10_messages():
 
 @app.route('/api/messages', methods=['GET'])
 async def get_messages():
+    print("Connecting to Telegram...")
 
     client = TelegramClient('new_session_name', API_ID, API_HASH)
     await client.start()
