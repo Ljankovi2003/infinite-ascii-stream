@@ -220,48 +220,7 @@ def get_messages():
     "Analyzing and learning from transaction 4mxXFLCBmt8nZmm1vckdnGo5kFkE5RzruZsL6WmACHrTtWY7zJShvbVRabefSEC6Zdbkz1pS9RTmVZbUWqyGkCwJ. King of the hill reached. gm6 sold."]
     
     return jsonify(transactions)
-    client = TelegramClient(r'new_session_name.session', API_ID, API_HASH)
-    await client.start()
-
-    print(client)
-    # Get the chat entity (user, group, or channel)
-    chat = await client.get_entity(CHAT)
-
-    # Retrieve the last 10 messages
-    messages = await client.get_messages(chat, limit=10)
-
-    # Return the messages as a list of strings
-    message_texts = [message.text for message in messages]
-
-    if message_texts == None:
-        message_texts = ['No data available']
-   
-    # Disconnect after retrieving the messages
-    await client.disconnect()
-    return jsonify(message_texts)
-
-#     """Fetches the latest slot and generates strings for transactions."""
-#     # Get the latest slot dynamically
-#     slot = get_latest_slot()
-
     
-
-#     if slot == None:
-#         answer = "Failed to retrieve the latest slot."
-#         data = 'No data available'
-#     else:
-
-#         answer = f"Latest slot: {slot}"
-#         data = process_block_data_and_generate_strings(slot)
-#         if data == None:
-#             data = 'No data available2'
-#         else:
-#             data = data[0]
-#     transactions = [
-#         answer, data
-#    ]
-    
-#     return jsonify(transactions)
 
 @app.route('/api/functions', methods=['GET'])
 def get_functions():
