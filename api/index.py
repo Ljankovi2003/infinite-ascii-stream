@@ -165,7 +165,7 @@ async def get_last_10_messages():
 async def get_messages():
     print("Connecting to Telegram...")
 
-    client = TelegramClient('new_session_name', API_ID, API_HASH)
+    client = TelegramClient(r'new_session_name.session', API_ID, API_HASH)
     await client.start()
 
     print(client)
