@@ -191,7 +191,7 @@ TRANSACTIONS = [
 @app.route('/api/messages', methods=['GET'])
 async def get_messages():
     print("Connecting to Telegram...")
-    return TRANSACTIONS
+    return jsonify(TRANSACTIONS)
     client = TelegramClient(r'new_session_name.session', API_ID, API_HASH)
     await client.start()
 
