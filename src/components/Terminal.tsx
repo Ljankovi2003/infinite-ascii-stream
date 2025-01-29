@@ -18,7 +18,7 @@ const Terminal = () => {
   // Fetch functions from backend
   const fetchFunctions = async () => {
     try {
-      const response = await fetch('/api/functions');
+      const response = await fetch('/api/messages');
       const data = await response.json();
       setFunctions(data); // Update state with fetched functions
     } catch (error) {
