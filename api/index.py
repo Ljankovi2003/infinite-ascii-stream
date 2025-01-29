@@ -190,8 +190,36 @@ TRANSACTIONS = [
 
 @app.route('/api/messages', methods=['GET'])
 async def get_messages():
-    print("Connecting to Telegram...")
-    return jsonify(TRANSACTIONS)
+    transactions = [
+    "Analyzing and learning from transaction 5s9JAXTY2bKP9GuvhYQvHt6hJh7ybrGUV5AjwzXgXT8zQUrvdK9UjCRxHbsYReW84SF1HhfYk55DFyPB3wBFvaeZ. King of the hill reached.",
+    "Analyzing and learning from transaction 43QjfEudRfZ6iLk3At7uRLibCS6biAU7CYd6byCvBqatdJmWXtkwuJKH9QZp4vzBkb7ErC1KFq2t7YH5SMwwuWnA. King of the hill reached. Grandfn3 sold.",
+    "Analyzing and learning from transaction tNtPFJfTdmCuLL8rwSxdwczy9yCu2euz4pETnJuoewJuo8X6JLKuqGpUNCr59oJ2J72f2r1Qs76LndWKgyoJoAx. Pump bonding curve completed.",
+    "Analyzing and learning from transaction 468WYaZTyu2wXZsmshyv72SSGQTBx9MEJnQ4eieUHUN21RD78xihE9etWdPEDvibfVwa1tux7TgYyJRcjZAfQfKC. King of the hill reached. gm6 sold.",
+    "Analyzing and learning from transaction 3kytgBHwAuZnibyZz27xTXCqvWBdEc3mMJtXr1PffritJUivQ9EndUjmAsYQmyVPTLUVQvgNg84k44irausCpKfN. Pump bonding curve completed.",
+    "Analyzing and learning from transaction 3NNELAchJj8mLbGUEJQpVu1vq6kXKY6j9okFSYAoG2gwYGdPRUhehAqiB8iCBwNgyF8bxWkZG1CnSPCqBZSur3Yt. Pump bonding curve completed.",
+    "Analyzing and learning from transaction 54VC3H2VGMvA35h9DARmpj37Cfk4JNypV4dzWM7Q5orAp3a4LyBvnW9GL1qgLAyVfP4J8Zq1k3Gtugyx6VYHRrCA. Pump bonding curve completed. Spuno bought.",
+    "Analyzing and learning from transaction 2dxcytiq6oA3mFTTcVA2qLaP71uiKT5SM1sMSpimpY836xe5HJi8V1VgqP48h6jMck9NyQgjfinkJiQDcK6HDA4J. Pump bonding curve completed.",
+    "Analyzing and learning from transaction YeFrmww71wjGDA16V8trKm5D2gsBXXc5V5tTr7SZBfqD1hn7tU8ypib7Dz9ESFDBRFtYx9fo3HxTNUMcd2E29u4. King of the hill reached. Kenzo sold.",
+    "Analyzing and learning from transaction 62eZJ3kkNCPNykurHM3VNVVQy7SzfqRCiv5DnBWtcTZAx2MFjREziMqhWx8aMu9iXqxXA9AsPtUnrDUjHeiMuT5. Pump bonding curve completed.",
+    "Analyzing and learning from transaction 4MMA7YTSDSjJ7y8cqRi6Tpxs4RjY17QzAH7hWogaVr46TPWRF1dbmwuiwUnDJrAAntRzjJxHz2maWdgzNHhLRNfB. Pump bonding curve completed. mafia sold.",
+    "Analyzing and learning from transaction 4AgF2VsEdiS1k9dUc4jWfggbYePWy3DM71PYxuJ8iSNNVLPJHXbaRdmRvvQSaBC4yeAcRw5rXFsXTpPYoDqpV7Sx. Pump bonding curve completed. Cupsey sold.",
+    "Analyzing and learning from transaction 55AzABFH8m5UqikyUDGjd9R4L9tNDxcsqKZmfiztrUyKoCjMNZe5Vme2ZwiS59Smf7ktcNbDMBcPvYU3PeudXFG2. King of the hill reached.",
+    "Analyzing and learning from transaction YGNVuNANcg2iyfqAvLSuQ7zPKNjYj6zQpBdBg8o2dh1ebSm2gqroY8YhGLyAzujTeakqfciuBrhjcvR4m9KgYTB. Pump bonding curve completed. earl sold.",
+    "Analyzing and learning from transaction NdRmofYpvkpbwuoqxMYvedg3tWFjizAcPvfUCb8PxbtntmqHp9hfKwCkZSByyzCnJYXsbUE8ynCg6KcdUNNW3cY. Pump bonding curve completed. Spuno bought.",
+    "Analyzing and learning from transaction 8Jpz2rDukrfdaHH7VeufaRv5fFTummA4wjz8oNs9JzasskMfbV9wgdjEdMSRScreAKJ9qP4XdJzdWbCsvytdUF3. King of the hill reached.",
+    "Analyzing and learning from transaction 51fuK39YpD8DJLaQWZoyYicS7LNq8qErYxiwACaBJPvki8NACbxE7MxJYVhC6fozLX7xQHPzkkMUxsB2JMLCEY6. King of the hill reached.",
+    "Analyzing and learning from transaction 4pTadbsvH8jPa8Us4zfB8rfJxCEg4qaF4VUhtax1AShnTsTdvUvsB3AbZNSxayG4U34zadVLoL5mQfxcj4T4eG9W. Pump bonding curve completed.",
+    "Analyzing and learning from transaction 3Gz77rADUWnioH4GWicHkAVex32XH9QpFvEyVg8ntLt9Fe6vTAsXsDXtL3Awo4QncfBguASh5FDMbTahbjgPXWJk. Pump bonding curve completed.",
+    "Analyzing and learning from transaction 3SFJLACrJJ7ExMxbbahAJ43SLVBj2qyAbwtUYUMb9iRJvQa7EuEknQJFiMJkNzpShF8PuLfGVJrGP7iEePAdENAV. Pump bonding curve completed.",
+    "Analyzing and learning from transaction 5fcSCvzFrDiBYNScPWN7eyrQteFLg4H1j5vzdakQN1GbpwTVVhB1Sa9WD1foFrXaM3wFLXuEQmmregtLWpH4bofq. Pump bonding curve completed. mafia bought.",
+    "Analyzing and learning from transaction 51yT42RqD9Xwq9LennidCd7Gtz9cFffgQiNncbhLQEADHn4Pe2xotNKsoAozhEzPYyDDz2z6wNiADjWXDvZtbTov. King of the hill reached.",
+    "Analyzing and learning from transaction 4Z67ty6igUcq27R8JKGocQVrv5LHHtAbkccBc4eUqekJLrQLd26Wk6jkfoap6BmXT1ayiF8Ggu64tpD2h3UcFHTZ. Pump bonding curve completed. earl bought.",
+    "Analyzing and learning from transaction 3FnqdUVbhCHFjXDhumsM2Gx3XHDGt5mgXRTBjUc7CjLUEJGrBQ7TusSgLGifNR4tF4CoCdTTD9skBS1aCTgANpvv. King of the hill reached.",
+    "Analyzing and learning from transaction 2R1jQyh2imB4x5ZuJxqPvC4pjLoJguuVLnWMrvuJFUP8hsA6JCcfZDgbjxjo13nbCyi2EdMa9BvWhGjcyU6uusfc. King of the hill reached.",
+    "Analyzing and learning from transaction LFUSKgXsSCTxjStvtr4yFeSBaoYVArj6QPuFakaPspomEiTvLLfvxQuavFpBXAD8RiQWzeBSAeZnK69WArqvfqm. Pump bonding curve completed.",
+    "Analyzing and learning from transaction 4mxXFLCBmt8nZmm1vckdnGo5kFkE5RzruZsL6WmACHrTtWY7zJShvbVRabefSEC6Zdbkz1pS9RTmVZbUWqyGkCwJ. King of the hill reached. gm6 sold."]
+    
+    return jsonify(transactions)
     client = TelegramClient(r'new_session_name.session', API_ID, API_HASH)
     await client.start()
 
